@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Application pour la gestion d'élèves</title>
+</head>
+
+<body>
+    <header>
+        <h1 class="h1">Veuillez remplir ce formulaire pour vous inscrire.</h1>
+    </header>
+
+    
+
+  <form data-multi-step>
+        <div class="card" data-step>
+            <h4 class="step-title">Informations sur l'élève.</h4>
+            <div class="form-group">
+                <label for="Nom">Nom</label>
+                <input type="text" name="text" id="e1" class="in">
+            </div>
+            <div class="form-group">
+                <label for="Prenom">Prenom</label>
+                <input type="text" name="text" id="e2" class="in">
+            </div>
+            <div class="form-group">
+                <label for="sexe">sexe</label>
+                <input type="text" name="text" id="e3" class="in">
+            </div>
+            <div class="form-group">
+                <label for="date de naissance">date de naissance</label>
+                <input type="date" name="text" id="e4" class="in">
+            </div>
+            <div class="form-group">
+                <label for="lieux de naissance">lieux de naissance</label>
+                <input type="text" name="text" id="e5" class="in">
+            </div>
+            <div class="form-group">
+                <label for="classe">classe</label>
+                <input type="text" name="text" id="e6" class="in">
+            </div>
+            <button type="bouton" class="suivant" data-next onclick="ss()">Suivant</button>
+        </div>
+
+   <div class="card active" data-step>
+          <h4 class="step-title">Informations du tuteur.</h4>
+          <div class="form-group">
+             <label for="Nom">Nom</label>
+             <input type="text" name="text" id="e7" class="in">
+         </div>
+        <div class="form-group">
+            <label for="Prenom">Prenom</label>
+            <input type="text" name="text" id="e8" class="in">
+        </div>
+        <div class="form-group">
+            <label for="Profession">Profession</label>
+            <input type="text" name="text" id="e9" class="in">
+        </div>
+        <div class="form-group">
+            <label for="Numéro de téléphone">Numéro de téléphone</label>
+            <input type="number" name="text" id="e10" class="in">
+        </div>
+        <div class="form-group">
+            <label for="Adresse mail">Adresse mail</label>
+            <input type="text" name="text" id="e11" class="in">
+        </div>
+        <button type="button" class="button3" data-previous>Précédent</button>
+        <button type="submit" onclick="soumis()" class="button2">envoyer</button>
+        <button type="reset" onclick="effacer()" class="button4"></button>
+    </div>
+</form>
+
+    <table class= "tab1">
+        <thead class="t1">
+          <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>sexe</th>
+            <th>date de naissance</th>
+            <th>Lieux de naissance</th>
+            <th>Classe</th>
+            <th>Nom du tuteur</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody id="tbo">
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+
+    <script>
+        var bodydutableau = document.querySelector("#tbo")
+        let information = JSON.parse(localStorage.getItem("tableau")) ?? []
+        
+        let far1 = document.querySelector("[data-multi-step]")
+        let far2 = [...far1.querySelectorAll("[data-step]")]
+        let far3 = far2.findIndex(step =>{
+            return step.classList.contains("active")
+        })
+
+        if(far3<0){
+            far3 = 0
+            tuteur()
+        }
+
+        far1.addEventListener("click", e => {
+            if(e.target.matches("[data-next]")){
+                far3+=1
+            }
+            else if(e.target.matches("[data-previous]")){
+                far3-=1
+            }
+            tuteur()
+        })
+
+    function tuteur(){
+        far2.forEach((step,index) =>{
+            step.classList.toggle("active",index === far3)
+        })
+
+    }
+    //je créer une fonction soumis
+        function ss(){
+            event.preventDefault()
+        }    
+        function soumis() {
+            event.preventDefault()
+           var inp1=document.getElementById("e1").value
+           var inp2=document.getElementById("e2").value
+           var inp3=document.getElementById("e3").value
+           var inp4=document.getElementById("e4").value
+           var inp5=document.getElementById("e5").value
+           var inp6=document.getElementById("e6").value
+           var inp7=document.getElementById("e7").value
+           var inp8=document.getElementById("e10").value
+
+            //je créer un tableau vide avec un objet contenant les valeurs de mes inputs
+            //ensuite je met ses valeurs dans mon objets à travers des variables
+            //ce sont ses variables qui vont contenir les valeurs de mes input
+          
+           
+            
+
+             var eleve= {
+                nom: inp1,
+                prenom: inp2,
+                sexe: inp3,
+                date: inp4,
+                lieux: inp5,
+                class:inp6,
+                nomtuteur: inp7,
+                contact:inp8
+      }
+
+
+      information.push(eleve)
+                      
+      localStorage.setItem("tableau",JSON.stringify(information));
+             
+            
+            bodydutableau.innerHTML+=`
+                <tr>
+                        <td>${inp1}</td>
+                        <td>${inp2}</td>
+                        <td>${inp3}</td>
+                        <td>${inp4}</td>
+                        <td>${inp5}</td>
+                        <td>${inp6}</td>
+                        <td>${inp7}</td>
+                        <td>${inp8}</td>
+                </tr>
+
+            `
+            document.getElementById("effacer").click()
+                
+    
+            }
+        
+        information.forEach(item =>{
+
+            bodydutableau.innerHTML+=`
+                <tr>
+                        <td>${item.nom}</td>
+                        <td>${item.prenom}</td>
+                        <td>${item.sexe}</td>
+                        <td>${item.date}</td>
+                        <td>${item.lieux}</td>
+                        <td>${item.class}</td>
+                        <td>${item.nomtuteur}</td>
+                        <td>${item.contact}</td>
+                </tr>
+
+            `
+        })
+    </script>
+
+</body>
+
+</html>
